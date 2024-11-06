@@ -1,6 +1,5 @@
 from pyamaze import maze, agent, COLOR
 
-
 class Maze:
     def __init__(self, rows, cols, start=(1, 1), end=None):
         self.rows = rows
@@ -30,7 +29,7 @@ class Maze:
         return directions['N'] == 1 or directions['S'] == 1 or directions['E'] == 1 or directions['W'] == 1
 
     def display(self):
-        robot_agent = agent(self.maze_grid, x=self.start[0], y=self.start[1], goal=(self.end[0], self.end[1]),
+        robot_agent = agent(self.maze_grid, x=self.start[0], y=self.start[1], goal=(self.end[0], self.end[1]), 
                             footprints=True, color=COLOR.blue)
         self.maze_grid.tracePath({robot_agent: [(self.end[0], self.end[1])]}, delay=100)
         self.maze_grid.run()
