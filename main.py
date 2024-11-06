@@ -1,4 +1,5 @@
 from ui.maze import Maze
+from ui.genotype import Genotype
 
 
 def main():
@@ -11,16 +12,20 @@ def main():
     laberinto.add_obstacle(4, 4)
     laberinto.add_obstacle(5, 5)
 
-    # Verificamos si una posición está libre
-    print(laberinto.is_free(1, 1))
-    print(laberinto.is_free(3, 3))
+    # Crear un genotipo con el laberinto
+    gen = Genotype(laberinto)
+    gen.calculate_fitness()
+    print("Genotipo:", gen)
 
-    # Obtener la posición de inicio y fin
-    print(laberinto.get_start_position())
-    print(laberinto.get_end_position())
+    # Aplicar mutación
+    gen.mutate(mutation_rate=0.1)
+    print("Genotipo después de mutación:", gen)
 
-    # Visualizar el laberinto
-    laberinto.display()
+    # Crear otro genotipo y hacer cruce
+    gen2 = Genotype(laberinto)
+    gen3 = gen.crossover(gen2)
+    gen3.calculate_fitness()
+    print("Genotipo resultado de cruce:", gen3)
 
 
 if __name__ == '__main__':
