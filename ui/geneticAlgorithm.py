@@ -34,4 +34,4 @@ class GeneticAlgorithm:
             print(f"Generación {generation}: Mejor aptitud = {self.population[0].fitness}")
 
     def solution_found(self):
-        return self.population[0].fitness > 0 and self.population[0].no_of_obstacles == 0
+        return self.population[0].fitness > 0 #and self.population[0].no_of_obstacles == 0
