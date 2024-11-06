@@ -48,24 +48,28 @@ def main():
 
     # Ejecutamos el algoritmo genético
     generations = 100  # Número de generaciones
-    ga.evolve(generations)
     laberinto.display()
 
     # Retornamos los objetos configurados
-    return laberinto, ga
+    return laberinto, ga, generations
 
-def prueba_algoritmo(laberinto, ga, generations=50):
+
+def prueba_algoritmo(laberinto, ga, generations):
     # Variables para almacenar los resultados
     best_fitness_history = []
     success_routes = 0
 
     # Ejecutar el algoritmo a través de generaciones adicionales
-    for generation in range(generations):
+    for generation in range(1, generations + 1):  # Empezamos desde la generación 1
+        print(f"--- Generación {generation} ---")  # Añadimos la impresión explícita de la generación
         ga.evolve(1)  # Evolucionar una generación adicional para pruebas
         
         # Almacenar el mejor resultado de la generación actual
         best_fitness = ga.population[0].fitness
         best_fitness_history.append(best_fitness)
+        
+        # Imprimir el progreso de la evolución
+        print(f"Generación {generation}: Mejor aptitud = {best_fitness}")
         
         # Verificar si se encontró una ruta exitosa
         if ga.solution_found():
@@ -82,9 +86,11 @@ def prueba_algoritmo(laberinto, ga, generations=50):
     plt.show()
 
     # Mostrar resultados finales
-    print(f"Rutas exitosas encontradas: {success_routes}/{generations}")
-    print(f"Aptitud máxima alcanzada: {best_fitness_history[-1]}")
+    print("No se evaluan las generaciones 0 que se repiten")
+    print(f"Rutas exitosas encontradas: {success_routes}/{generations}"+" resultado erroneo")
+    print(f"Aptitud máxima alcanzada: {max(best_fitness_history)}")  # Mostrar la mejor aptitud alcanzada
+    
 
 if __name__ == '__main__':
-    laberinto, ga = main()
-    prueba_algoritmo(laberinto, ga)
+    laberinto, ga, generations= main()
+    prueba_algoritmo(laberinto, ga, generations)
