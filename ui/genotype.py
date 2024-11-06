@@ -2,12 +2,12 @@ import random
 
 class Genotype:
     def __init__(self, maze, path=None, direction_bits=None):
-        self.maze = maze 
+        self.maze = maze
         self.start = self.maze.get_start_position()
         self.end = self.maze.get_end_position()
         self.path = path if path else self.generate_random_path()
         self.direction_bits = direction_bits if direction_bits else self.generate_random_directions()
-        self.fitness = None 
+        self.fitness = None
 
     def generate_random_path(self, length=10):
         # Generamos una lista de segmentos de longitud aleatoria
@@ -64,7 +64,7 @@ class Genotype:
         length_factor = 1 / (total_distance + 1)
         turns_factor = 1 / (num_turns + 1)
 
-        # Calculamos funcion fitness
+        # Calculamos función fitness
         self.fitness = (weight_feasibility * feasibility_factor +
                         weight_length * length_factor +
                         weight_turns * turns_factor)
@@ -91,7 +91,7 @@ class Genotype:
         # Mutamos el camino y los bits de dirección con una tasa de mutación
         for i in range(len(self.path)):
             if random.random() < mutation_rate:
-                # Mutar la posición objetivo en el camino
+                 # Mutar la posición objetivo en el camino
                 self.path[i] = (random.randint(1, self.maze.rows), random.randint(1, self.maze.cols))
             if random.random() < mutation_rate:
                 # Mutar el bit de dirección
