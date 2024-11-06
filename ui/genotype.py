@@ -22,42 +22,52 @@ class Genotype:
         # Lista de bits de dirección aleatoria
         return [random.choice([0, 1]) for _ in range(len(self.path))]
 
-    def calculate_fitness(self):
+    def calculate_fitness(self, weight_feasibility=3, weight_length=2, weight_turns=2):
         # Calculamos la aptitud del genotipo basado en la distancia a la meta y sus colisiones
         position = self.start
         total_distance = 0
         valid_moves = True
+        num_turns = 0
 
         for idx, (target, direction_bit) in enumerate(zip(self.path, self.direction_bits)):
             if not valid_moves:
                 break
 
-            # Aplicamos el bit de dirección para definir los movimientos
+            # Calculamos el movimiento basado en el bit de dirección
             if direction_bit == 0:
                 # Movimiento vertical seguido de movimiento horizontal
-                position = self.move_vertically(position, target[0])
-                if self.maze.is_free(*position):
-                    position = self.move_horizontally(position, target[1])
-                    if not self.maze.is_free(*position):
+                new_position = self.move_vertically(position, target[0])
+                if self.maze.is_free(*new_position):
+                    position = new_position
+                    new_position = self.move_horizontally(position, target[1])
+                    if not self.maze.is_free(*new_position):
                         valid_moves = False
                 else:
                     valid_moves = False
             else:
                 # Movimiento horizontal seguido de movimiento vertical
-                position = self.move_horizontally(position, target[1])
-                if self.maze.is_free(*position):
-                    position = self.move_vertically(position, target[0])
-                    if not self.maze.is_free(*position):
+                new_position = self.move_horizontally(position, target[1])
+                if self.maze.is_free(*new_position):
+                    position = new_position
+                    new_position = self.move_vertically(position, target[0])
+                    if not self.maze.is_free(*new_position):
                         valid_moves = False
                 else:
                     valid_moves = False
 
-            # Calcular distancia al objetivo final
-            total_distance += abs(self.end[0] - position[0]) + abs(self.end[1] - position[1])
+            if valid_moves:
+                total_distance += abs(self.end[0] - position[0]) + abs(self.end[1] - position[1])
+                if idx > 0 and self.direction_bits[idx] != self.direction_bits[idx - 1]:
+                    num_turns += 1
 
-        # Penalización en caso de colisiones
-        penalty = 100 if not valid_moves else 0
-        self.fitness = 1 / (total_distance + 1) - penalty
+        feasibility_factor = 1 if valid_moves else 0
+        length_factor = 1 / (total_distance + 1)
+        turns_factor = 1 / (num_turns + 1)
+
+        # Calculamos funcion fitness
+        self.fitness = (weight_feasibility * feasibility_factor +
+                        weight_length * length_factor +
+                        weight_turns * turns_factor)
 
     def move_vertically(self, position, target_row):
         # Movemos el robot en la dirección vertical hacia la fila objetivo
